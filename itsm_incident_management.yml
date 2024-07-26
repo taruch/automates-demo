@@ -1,0 +1,75 @@
+---
+- name: Create an incident ticket in ServiceNow
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    # - name: Create incident
+    #   servicenow.itsm.incident:
+    #     instance:
+    #       host: "{{ SN_HOST }}"
+    #       username: "{{ SN_USERNAME }}"
+    #       password: "{{ SN_PASSWORD }}"
+    #     state: new
+    #     caller: splunk_ansible_workflow
+    #     short_description: Block IP Workflow
+    #     description: Splunk AAP workflow blocking IP - ticket review
+    #     impact: med
+    #     urgency: med
+    #   register: incident_out
+
+
+
+
+    - name: Create incident
+      tags:
+        - create
+        - never
+      servicenow.itsm.incident:
+        instance:
+          host: "{{ SN_HOST }}"
+          username: "{{ SN_USERNAME }}"
+          password: "{{ SN_PASSWORD }}"
+        state: new
+        caller: admin
+        short_description: "{{ ansible_eda.event.title }}: {{ ansible_eda.event.affectedEntities[0].name }}"
+        description: "{{ ansible_eda }}"
+        impact: med
+        urgency: med
+      register: incident_out
+
+    - name: Change state of the incident
+      tags:
+        - update
+        - never
+      servicenow.itsm.incident:
+        instance:
+          host: "{{ SN_HOST }}"
+          username: "{{ SN_USERNAME }}"
+          password: "{{ SN_PASSWORD }}"
+        number: INC0000001
+        state: in_progress
+
+    - name: Close incident
+      tags:
+        - close
+        - never
+      servicenow.itsm.incident:
+        instance:
+          host: "{{ SN_HOST }}"
+          username: "{{ SN_USERNAME }}"
+          password: "{{ SN_PASSWORD }}"
+
+        state: closed
+        number: INC0000001
+        close_code: "Solved (Permanently)"
+        close_notes: "Closed"
+
+
+    - name: Set Incident Number
+      tags:
+        - always
+      when: incident_out is defined
+      ansible.builtin.set_stats:
+        data:
+          ServiceNow_Incident_Number: "{{ incident_out.record.number }}"
