@@ -22,5 +22,5 @@
     return_content: true
     headers:
       Content-Type: application/json
-      Authorization: 'Api-Token dt0c01.OHLUYT6IWFCYOERGXG5THEG7.RBV54ITNWMY5BBSQDNM3XTHRISLRXTJXPLXKWKS6WJLI73QC7N7I6PADZPFA2BU3'
+      Authorization: "Api-Token {{ dt_api_token }}"
     body: '{"message": "Closed by Ansible after validating service was restored"}'
