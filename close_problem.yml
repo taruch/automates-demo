@@ -18,8 +18,7 @@
   ansible.builtin.uri:
     url: "{{ dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
     method: POST
-    status_code: [200, 202]
-    return_content: true
+    status_code: [200, 202, 204]
     headers:
       Content-Type: application/json
       Authorization: "Api-Token {{ dt_api_token }}"
