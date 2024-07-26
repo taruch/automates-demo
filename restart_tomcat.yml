@@ -6,7 +6,18 @@
   gather_facts: False
 
   tasks:
-    - name: Start service httpd, if not started
+    - name: Start service, if not started
       ansible.builtin.service:
         name: "{{ ansible_eda.event.impactedEntities[0].name }}"
         state: started
+      notify: validate_tomcat
+
+  handlers:
+    - name: validate_tomcat
+      delegate_to: localhost
+      ansible.builtin.uri:
+        url: http://{{ inventory_hostname }}
+        return_content: true
+      register: tomcat_content
+      # failed_when: this is failed or "'AWESOME' not in this.content"
+

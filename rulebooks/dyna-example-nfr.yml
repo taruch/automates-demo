@@ -37,38 +37,5 @@
 #        run_playbook:
 #          name: dt-update-comments.yml
 
-    # - name: Dynatrace | Sample rule part 1
-    #   condition: event.title == "SSL certificate expiration"
-    #   action:
-    #     post_event:
-    #       debug:
-    #       # event:
-    #         # edaTest: "{{ event.impactedEntities | selectattr('name', '==', 'NFLIS Health Check') | list }}"
-    #         # edaTest: "{{ event.impactedEntities | attr('entityId') | |  map(attribute='entityId') | list)[0] }}"
-    #         # edaTest: "{{ (event.impactedEntities | selectattr('name', '==', 'NFLIS Health Check') | map(attribute='entityId') | list)[0] }}"
 
-    # - name: Dynatrace | Sample rule part 1.2
-    #   condition: event.payload is defined
-    #   action:
-    #     debug:
-    #     run_job_template:
-    #       name: EDA Dynatrace Test 3
-    #       organization: Default
-    #       job_args:
-    #         extra_vars:
-    #           #_hosts: "{{ (event.entityTags | selectattr('key', '==', 'Application') | map(attribute='value') | list)[0] }}"
-    #           edaTest: "{{ event.edaTest }}"
-
-    # - name: Dynatrace | Sample rule
-    #   condition:
-    #     all:
-    #       - event.impactedEntities is selectattr('name', '==', "Qualys Cloud Agent")
-    #   action:
-    #     debug:
-    #      run_job_template:
-    #        name: Restart Tomcat
-    #        organization: Default
-    #        job_args:
-    #          extra_vars:
-    #            _hosts: "{{ (event.entityTags | selectattr('key', '==', 'Environment') | map(attribute='value') | list)[0] }}"
 ...
