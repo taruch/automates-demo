@@ -34,6 +34,7 @@
         caller: admin
         short_description: "{{ ansible_eda.event.title }}: {{ ansible_eda.event.affectedEntities[0].name }}"
         description: "{{ ansible_eda }}"
+        additional_comments: "{{ ansible_eda }}"
         impact: med
         urgency: med
       register: incident_out
