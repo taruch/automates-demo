@@ -31,10 +31,11 @@
           username: "{{ SN_USERNAME }}"
           password: "{{ SN_PASSWORD }}"
         state: new
-        caller: admin
+        caller: splunk_ansible_workflow
         short_description: "{{ ansible_eda.event.title }}: {{ ansible_eda.event.affectedEntities[0].name }}"
         description: "{{ ansible_eda }}"
-        additional_comments: "{{ ansible_eda }}"
+        other:
+          additional_comments: "{{ ansible_eda }}"
         impact: med
         urgency: med
       register: incident_out
