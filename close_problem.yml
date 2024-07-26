@@ -16,7 +16,7 @@
 - name: Close problem
   delegate_to: localhost
   ansible.builtin.uri:
-    url: "https://{{ _dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
+    url: "https://{{ dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
     method: POST
     status_code: [200, 202]
     return_content: true
