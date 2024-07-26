@@ -16,6 +16,7 @@
       ansible.builtin.pause:
         seconds: 20
 
+  handlers:
     - name: validate_tomcat
       ansible.builtin.import_tasks:
         file: close_problem.yml
