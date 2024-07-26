@@ -34,8 +34,8 @@
         caller: splunk_ansible_workflow
         short_description: "{{ ansible_eda.event.title }}: {{ ansible_eda.event.affectedEntities[0].name }}"
         description: "{{ ansible_eda | to_nice_yaml }}"
-        urgency: 2
-        impact: 2
+        impact: medium
+        urgency: medium
       register: incident_out
 
     - name: Change state of the incident
