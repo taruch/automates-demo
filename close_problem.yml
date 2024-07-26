@@ -1,4 +1,9 @@
 ---
+
+- name: Pause for 20 seconds to let service start
+  ansible.builtin.pause:
+    seconds: 20
+
 - name: Validate service is accessible
   delegate_to: localhost
   ansible.builtin.uri:

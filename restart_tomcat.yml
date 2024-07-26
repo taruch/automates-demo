@@ -10,14 +10,11 @@
       ansible.builtin.service:
         name: "{{ ansible_eda.event.impactedEntities[0].name }}"
         state: started
-      notify: validate_tomcat
+      register: service_results
 
-    - name: Pause for 20 seconds to let service start
-      ansible.builtin.pause:
-        seconds: 20
-
-  handlers:
     - name: validate_tomcat
-      include: close_problem.yml
+      when: service_results.changed
+      ansible.builtin.include_tasks: 
+        file: close_problem.yml
 
 ...
