@@ -12,6 +12,10 @@
         state: started
       notify: validate_tomcat
 
+    - name: Pause for 20 seconds to let service start
+      ansible.builtin.pause:
+        seconds: 20
+
   handlers:
     - name: validate_tomcat
       delegate_to: localhost
