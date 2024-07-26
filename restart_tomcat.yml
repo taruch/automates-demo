@@ -10,27 +10,14 @@
       ansible.builtin.service:
         name: "{{ ansible_eda.event.impactedEntities[0].name }}"
         state: started
+      notify: validate_tomcat
 
     - name: Pause for 20 seconds to let service start
       ansible.builtin.pause:
         seconds: 20
 
     - name: validate_tomcat
-      delegate_to: localhost
-      ansible.builtin.uri:
-        url: http://{{ inventory_hostname }}:8080
-        return_content: true
-      register: tomcat_results
-      failed_when: tomcat_result is failed or "'Ansible' not in tomcat_results.content"
+      ansible.builtin.import_tasks:
+        file: close_problem.yml
 
-    - name: Close problem
-      delegate_to: localhost
-      ansible.builtin.uri:
-        url: "https://{{ _dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
-        method: POST
-        status_code: [200, 202]
-        return_content: true
-        headers:
-          Content-Type: application/json
-          Authorization: 'Api-Token dt0c01.OHLUYT6IWFCYOERGXG5THEG7.RBV54ITNWMY5BBSQDNM3XTHRISLRXTJXPLXKWKS6WJLI73QC7N7I6PADZPFA2BU3'
-        body: '{"message": "Closed by Ansible after validating service was restored"}'
+...
