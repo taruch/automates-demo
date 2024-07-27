@@ -4,23 +4,6 @@
   gather_facts: false
 
   tasks:
-    # - name: Create incident
-    #   servicenow.itsm.incident:
-    #     instance:
-    #       host: "{{ SN_HOST }}"
-    #       username: "{{ SN_USERNAME }}"
-    #       password: "{{ SN_PASSWORD }}"
-    #     state: new
-    #     caller: splunk_ansible_workflow
-    #     short_description: Block IP Workflow
-    #     description: Splunk AAP workflow blocking IP - ticket review
-    #     impact: med
-    #     urgency: med
-    #   register: incident_out
-
-
-
-
     - name: Create incident
       tags:
         - create
@@ -40,6 +23,18 @@
 
     - name: Change state of the incident
       tags:
+        - in_progress
+        - never
+      servicenow.itsm.incident:
+        instance:
+          host: "{{ SN_HOST }}"
+          username: "{{ SN_USERNAME }}"
+          password: "{{ SN_PASSWORD }}"
+        number: "{{ ServiceNow_Incident_Number }}"
+        state: in_progress
+
+    - name: Update the incident
+      tags:
         - update
         - never
       servicenow.itsm.incident:
@@ -47,8 +42,8 @@
           host: "{{ SN_HOST }}"
           username: "{{ SN_USERNAME }}"
           password: "{{ SN_PASSWORD }}"
-        number: INC0000001
-        state: in_progress
+        number: "{{ ServiceNow_Incident_Number }}"
+        work_notes: "Adding in some work nodes"
 
     - name: Close incident
       tags:
@@ -59,12 +54,12 @@
           host: "{{ SN_HOST }}"
           username: "{{ SN_USERNAME }}"
           password: "{{ SN_PASSWORD }}"
-
+        number: "{{ ServiceNow_Incident_Number }}"
         state: closed
-        number: INC0000001
         close_code: "Solved (Permanently)"
-        close_notes: "Closed"
+        close_notes: "{{ service_notes }}"
 
+    - name: servicenow update notes
 
     - name: Set Incident Number
       tags:

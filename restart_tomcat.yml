@@ -4,6 +4,8 @@
   #hosts: "{{ _hosts }}"
   become: true
   gather_facts: False
+  vars:
+    service_notes: []
 
   tasks:
     - name: Start service, if not started
@@ -12,9 +14,19 @@
         state: started
       register: service_results
 
+    - name: Update service_notes
+      ansible.builtin.set_fact:
+        service_notes: "{{ service_notes + service_results.stdout_lines }}"
+
     - name: validate_tomcat
       when: service_results.changed
       ansible.builtin.include_tasks: 
         file: close_problem.yml
+
+    - name: Set Incident Number
+      when: service_notes is defined
+      ansible.builtin.set_stats:
+        data:
+          ServiceNow_Incident_Number: "{{ incident_out.record.number }}"
 
 ...

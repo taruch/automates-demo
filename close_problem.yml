@@ -12,6 +12,9 @@
   register: tomcat_results
   # failed_when: tomcat_result is failed or "'Ansible' not in tomcat_results.content"
 
+- name: Update service_notes
+  ansible.builtin.set_fact:
+        service_notes: "{{ service_notes + tomcat_results.invocation }}"
 
 - name: Close problem
   delegate_to: localhost
@@ -22,4 +25,4 @@
     headers:
       Content-Type: application/json
       Authorization: "Api-Token {{ dt_api_token }}"
-    body: '{"message": "Closed by Ansible after validating service was restored"}'
+    body: '{"message": "Closed by Ansible after validating service was restored \n {{ tomcat_results.invocation }}"}'
