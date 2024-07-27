@@ -1,7 +1,6 @@
 ---
 - name: Listen for events on Dynatrace API
   hosts: all
-  match_multiple_rules: True
   sources:
     - dynatrace.event_driven_ansible.dt_esa_api:
         dt_api_host: "{{ _dt_api_host }}"
@@ -12,30 +11,12 @@
     - name: Dynatrace | Service Issue
       condition: event.impactedEntities[0].entityId.id is defined
       action:
-        run_job_template:
-          name: Restart Service
+        # run_job_template:
+          # name: Restart Service
+        run_workflow_template:
+	        name: Web Service Incident Auto-remediation
           organization: Default
           job_args:
             extra_vars:
-
-              # _hosts: "{{ event.process_group }}"
-              # _service: "{{ event.process_name }}"
-
-    - name: Problem payload Dynatrace for App Failure rate increase issue
-      condition: event.title contains "Failure rate increase"
-      action:
-        debug:
-#        run_job_template:
-#          name: "Remediate Application issue"
-#          organization: "Default"
-    - name: Update comments in Dynatrace
-      condition:
-        all:
-          - event.status == "OPEN"
-      action:
-        debug:
-#        run_playbook:
-#          name: dt-update-comments.yml
-
 
 ...
