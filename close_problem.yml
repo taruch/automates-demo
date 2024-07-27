@@ -35,4 +35,4 @@
     headers:
       Content-Type: application/json
       Authorization: "Api-Token {{ dt_api_token }}"
-    body: '{"message": "Closed by Ansible after validating service was restored \n {{ tomcat_results.invocation }}"}'
+    body: '{"message": "Closed by Ansible after validating service was restored \n {{ service_notes }}"}'
