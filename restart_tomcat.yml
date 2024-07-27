@@ -16,7 +16,7 @@
 
     - name: Update service_notes
       ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + service_results.stdout_lines }}"
+        service_notes: "{{ service_notes + service_results.invocation }}"
 
     - name: validate_tomcat
       when: service_results.changed
