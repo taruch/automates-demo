@@ -42,8 +42,10 @@
           service_message: "{'msg': '{{ tomcat_results.msg }}'}"
 
       - name: Update service_notes
-        ansible.builtin.set_fact:
-          service_notes: "{{ service_notes + item }}"
+        # ansible.builtin.set_fact:
+          # service_notes: "{{ service_notes + item }}"
+        debug:
+          msg: "{{ item | type_debug }}"
         loop:
         - "{{ service_desc }}"
         - "{{ service_url }}"
