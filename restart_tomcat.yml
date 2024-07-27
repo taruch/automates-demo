@@ -52,12 +52,12 @@
 
       - name: debug
         debug:
-          var: service_notes
+          msg: "{{ service_notes | to_nice_yaml }}"
 
     - name: Pass service_notes to next job_template in workflow
       when: service_notes is defined
       ansible.builtin.set_stats:
         data:
-          service_notes: "{{ service_notes }}"
+          service_notes: "{{ service_notes | to_nice_yaml }}"
 
 ...
