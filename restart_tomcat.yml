@@ -14,6 +14,10 @@
         state: started
       register: service_results
 
+    - name: Debug
+      ansible.builtin.debug:
+        var: service_results
+
     - name: Update service_notes
       ansible.builtin.set_fact:
         service_notes: "{{ service_notes + service_results.invocation }}"
