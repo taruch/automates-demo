@@ -14,7 +14,7 @@
 
 - name: Update service_notes
   ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + tomcat_results.invocation }}"
+        service_notes: "{{ service_notes + tomcat_results.invocation | to_nice_yaml }}"
 
 - name: Close problem
   delegate_to: localhost

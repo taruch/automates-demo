@@ -15,11 +15,13 @@
       register: service_results
 
     - name: Create some facts
+      when: service_results.changed
       ansible.builtin.set_fact:
         service_desc: "Description: {{ service_results.status.Description}} \n"
         service_state: "State: {{ service_results.state }} \n"
 
     - name: Update service_notes
+      when: service_results.changed
       ansible.builtin.set_fact:
         service_notes: "{{ service_notes + service_desc }}"
         service_notes: "{{ service_notes + service_state }}"
@@ -33,6 +35,6 @@
       when: service_notes is defined
       ansible.builtin.set_stats:
         data:
-          ServiceNow_Incident_Number: "{{ incident_out.record.number }}"
+          service_notes: "{{ service_notes }}"
 
 ...
