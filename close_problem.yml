@@ -18,7 +18,10 @@
 
 - name: Update service_notes
   ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + (tomcat_results.invocation | to_json(indent=4)) }}"
+        service_url: "url: {{ tomcat_results.url}} \n"
+        service_status: "status: {{ tomcat_results.status}} \n"
+        service_message: "msg: {{ tomcat_results.msg }} \n"
+        service_notes: "{{ service_notes + (tomcat_results | to_json(indent=4)) }}"
 
 - name: Close problem
   delegate_to: localhost
