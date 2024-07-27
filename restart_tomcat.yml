@@ -42,16 +42,17 @@
           service_message: "{'msg': '{{ tomcat_results.msg }}'}"
 
       - name: Update service_notes
-        # ansible.builtin.set_fact:
-          # service_notes: "{{ service_notes + item }}"
+        ansible.builtin.set_fact:
+          service_notes:
+            - "{{ service_desc }}"
+            - "{{ service_url }}"
+            - "{{ service_state }}"
+            - "{{ service_status }}"
+            - "{{ service_message }}"
+
+      - name: debug
         debug:
-          msg: "{{ item | type_debug }}"
-        loop:
-        - "{{ service_desc }}"
-        - "{{ service_url }}"
-        - "{{ service_state }}"
-        - "{{ service_status }}"
-        - "{{ service_message }}"
+          var: service_notes
 
     - name: Pass service_notes to next job_template in workflow
       when: service_notes is defined
