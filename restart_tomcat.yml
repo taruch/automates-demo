@@ -20,8 +20,8 @@
       - name: Create some facts
         when: service_results.changed
         ansible.builtin.set_fact:
-          service_desc: "'Description': '{{ service_results.status.Description}}''"
-          service_state: "'State': '{{ service_results.state }}''"
+          service_desc: "{'Description': '{{ service_results.status.Description}}'}"
+          service_state: "{'State': '{{ service_results.state }}'}"
 
       - name: Pause (10s) to let service start
         ansible.builtin.pause:
