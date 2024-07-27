@@ -1,0 +1,14 @@
+- hosts: localhost
+
+  vars:
+
+    users_str: |
+      {name: user1, uid: 5000}
+      {name: user2, uid: 5001}
+
+    users_list: "{{ users_str.splitlines()|map('from_yaml')|list }}"
+
+  tasks:
+
+    - debug:
+        var: users_list
