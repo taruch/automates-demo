@@ -34,9 +34,10 @@
 
     - name: Make some facts
       ansible.builtin.set_fact:
-        service_url: "'url': '{{ tomcat_results.url}}'"
-        service_status: "'status': '{{ tomcat_results.status}}'"
-        service_message: "'msg': '{{ tomcat_results.msg }}'"
+        service_url: "{'url': '{{ tomcat_results.url}}'}"
+        service_status: "{'status': '{{ tomcat_results.status}}'}"
+        service_message: "{'msg': '{{ tomcat_results.msg }}'}"
+
 
 
     - name: Update service_notes
