@@ -5,7 +5,7 @@
   become: true
   gather_facts: False
   vars:
-    service_notes: ""
+    service_notes: {}
 
   tasks:
     - name: Start service, if not started
@@ -14,54 +14,44 @@
         state: started
       register: service_results
 
-    - name: Create some facts
+    - name: Other things
       when: service_results.changed
-      ansible.builtin.set_fact:
-        service_desc: "'Description': '{{ service_results.status.Description}}''"
-        service_state: "'State': '{{ service_results.state }}''"
+      block:
+      - name: Create some facts
+        when: service_results.changed
+        ansible.builtin.set_fact:
+          service_desc: "'Description': '{{ service_results.status.Description}}''"
+          service_state: "'State': '{{ service_results.state }}''"
 
-    - name: Pause (10s) to let service start
-      ansible.builtin.pause:
-        seconds: 10
+      - name: Pause (10s) to let service start
+        ansible.builtin.pause:
+          seconds: 10
 
-    - name: Validate service is accessible
-      delegate_to: localhost
-      ansible.builtin.uri:
-        url: http://{{ inventory_hostname }}:8080
-        return_content: true
-      register: tomcat_results
-      # failed_when: tomcat_result is failed or "'Ansible' not in tomcat_results.content"
+      - name: Validate service is accessible
+        delegate_to: localhost
+        ansible.builtin.uri:
+          url: http://{{ inventory_hostname }}:8080
+          return_content: true
+        register: tomcat_results
+        # failed_when: tomcat_result is failed
 
-    - name: Make some facts
-      ansible.builtin.set_fact:
-        service_url: "{'url': '{{ tomcat_results.url}}'}"
-        service_status: "{'status': '{{ tomcat_results.status}}'}"
-        service_message: "{'msg': '{{ tomcat_results.msg }}'}"
+      - name: Make some facts
+        ansible.builtin.set_fact:
+          service_url: "{'url': '{{ tomcat_results.url}}'}"
+          service_status: "{'status': '{{ tomcat_results.status}}'}"
+          service_message: "{'msg': '{{ tomcat_results.msg }}'}"
 
+      - name: Update service_notes
+        ansible.builtin.set_fact:
+          service_notes: "{{ service_notes + item }}"
+        loop:
+        - "{{ service_desc }}"
+        - "{{ service_url }}"
+        - "{{ service_state }}"
+        - "{{ service_status }}"
+        - "{{ service_message }}"
 
-
-    - name: Update service_notes
-      ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + item }}"
-      loop:
-       - "{{ service_desc }}"
-       - "{{ service_url }}"
-       - "{{ service_state }}"
-       - "{{ service_status }}"
-       - "{{ service_message }}"
-
-    - name: Close problem in Dynatrace
-      delegate_to: localhost
-      ansible.builtin.uri:
-        url: "{{ dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
-        method: POST
-        status_code: [200, 202, 204]
-        headers:
-          Content-Type: application/json
-          Authorization: "Api-Token {{ dt_api_token }}"
-        body: '{"message": "Closed by Ansible after validating service was restored \n {{ service_notes }}"}'
-
-    - name: Set Incident Number
+    - name: Pass service_notes to next job_template in workflow
       when: service_notes is defined
       ansible.builtin.set_stats:
         data:

@@ -1,38 +1,15 @@
 ---
-
-- name: Pause for 20 seconds to let service start
-  ansible.builtin.pause:
-    seconds: 10
-
-- name: Validate service is accessible
-  delegate_to: localhost
-  ansible.builtin.uri:
-    url: http://{{ inventory_hostname }}:8080
-    return_content: true
-  register: tomcat_results
-  # failed_when: tomcat_result is failed or "'Ansible' not in tomcat_results.content"
-
-- name: Debug
-  debug:
-    var: tomcat_results
-
-- name: Make some facts
-  ansible.builtin.set_fact:
-        service_url: "url: {{ tomcat_results.url}} \n"
-        service_status: "status: {{ tomcat_results.status}} \n"
-        service_message: "msg: {{ tomcat_results.msg }} \n"
-
-- name: Update service_notes
-  ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + service_url + service_status + service_message }}"
-
-- name: Close problem
-  delegate_to: localhost
-  ansible.builtin.uri:
-    url: "{{ dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
-    method: POST
-    status_code: [200, 202, 204]
-    headers:
-      Content-Type: application/json
-      Authorization: "Api-Token {{ dt_api_token }}"
-    body: '{"message": "Closed by Ansible after validating service was restored \n {{ service_notes }}"}'
+- name: Close Problem in Dynatrace
+  hosts: localhost
+  gather_facts: False
+  become: False
+  tasks:
+    - name: Close problem in Dynatrace
+      ansible.builtin.uri:
+        url: "{{ dt_api_host }}/api/v2/problems/{{ ansible_eda.event.problemId }}/close"
+        method: POST
+        status_code: [200, 202, 204]
+        headers:
+          Content-Type: application/json
+          Authorization: "Api-Token {{ dt_api_token }}"
+        body: '{"message": "Closed by Ansible after validating service was restored \n {{ service_notes }}"}'
