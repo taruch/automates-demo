@@ -23,7 +23,7 @@
     - name: Update service_notes
       when: service_results.changed
       ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + service_desc }}"
+        # service_notes: "{{ service_notes + service_desc }}"
         service_notes: "{{ service_notes + service_state }}"
 
     - name: validate_tomcat

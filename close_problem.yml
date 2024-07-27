@@ -21,7 +21,7 @@
         service_url: "url: {{ tomcat_results.url}} \n"
         service_status: "status: {{ tomcat_results.status}} \n"
         service_message: "msg: {{ tomcat_results.msg }} \n"
-        service_notes: "{{ service_notes + (tomcat_results | to_json(indent=4)) }}"
+        service_notes: "{{ service_notes + service_url + service_status + service_message }}"
 
 - name: Close problem
   delegate_to: localhost
