@@ -5,7 +5,7 @@
   become: true
   gather_facts: False
   vars:
-    service_notes: []
+    service_notes: {}
 
   tasks:
     - name: Start service, if not started
@@ -20,8 +20,10 @@
 
     - name: Update service_notes
       ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + service_results.status.Description }}"
-        service_notes: "{{ service_notes + service_results.state }}"
+        service_desc: "{Description: {{ service_results.status.Description}} }"
+        service_state: "{State: {{ service_results.state }}}"
+        service_notes: "{{ service_notes + service_desc }}"
+        service_notes: "{{ service_notes + service_state }}"
 
     - name: validate_tomcat
       when: service_results.changed
