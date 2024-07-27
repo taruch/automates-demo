@@ -14,7 +14,8 @@
 
 - name: Update service_notes
   ansible.builtin.set_fact:
-        service_notes: "{{ service_notes + tomcat_results.invocation | to_nice_yaml }}"
+        service_notes: "{{ service_notes + tomcat_results.invocation | dict2items | 
+          json_query('[].join(`=`, [key, to_string(value)])') | join(',') }}"
 
 - name: Close problem
   delegate_to: localhost
