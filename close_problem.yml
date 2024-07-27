@@ -12,6 +12,10 @@
   register: tomcat_results
   # failed_when: tomcat_result is failed or "'Ansible' not in tomcat_results.content"
 
+- name: Debug
+  debug:
+    var: tomcat_results
+
 - name: Update service_notes
   ansible.builtin.set_fact:
         service_notes: "{{ service_notes + (tomcat_results.invocation | to_json(indent=4)) }}"
