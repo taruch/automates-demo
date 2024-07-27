@@ -59,8 +59,6 @@
         close_code: "Solved (Permanently)"
         close_notes: "{{ service_notes }}"
 
-    - name: servicenow update notes
-
     - name: Set Incident Number
       tags:
         - always
