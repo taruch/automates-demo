@@ -14,14 +14,17 @@
         state: started
       register: service_results
 
-    - name: Debug
-      ansible.builtin.debug:
-        var: service_results
+    # - name: Debug
+    #   ansible.builtin.debug:
+    #     var: service_results
 
-    - name: Update service_notes
+    - name: Create some facts
       ansible.builtin.set_fact:
         service_desc: "{Description: {{ service_results.status.Description}} }"
         service_state: "{State: {{ service_results.state }}}"
+
+    - name: Update service_notes
+      ansible.builtin.set_fact:
         service_notes: "{{ service_notes + service_desc }}"
         service_notes: "{{ service_notes + service_state }}"
 
